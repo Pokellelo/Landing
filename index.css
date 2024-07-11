@@ -1,0 +1,15 @@
+#tools{
+    position: fixed;
+    top: 100px;
+    right:5px;
+    display: flex;
+    flex-direction: column;
+}
+
+#tools button{
+    flex: content;
+    margin: 10px 0px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
