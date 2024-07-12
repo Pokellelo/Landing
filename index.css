@@ -23,7 +23,6 @@
     border-radius: 5px;
     resize:both;
     overflow: auto;
-    transition: all 0.1s;
 }
 
 .basic-element:hover{
@@ -34,11 +33,4 @@
 
 body{
     padding: 5px;
-}
-
-#menu{
-
-    padding: 10px;
-    border: 1px red solid;
-    position: absolute;
 }

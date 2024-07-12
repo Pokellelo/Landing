@@ -1,4 +1,5 @@
 const defaultElement = {
+  id: 0,
   title: "No title",
   width: "100px",
   height: "100px",
@@ -20,12 +21,20 @@ const regex_url = /e/;
 let selected_id = null;
 let being_paste = false;
 
-const generateElement = (e) => {
+const generateElement = (e, index) => {
+  
   const d = document.createElement("div");
   d.className = "basic-element";
-  const text = document.createTextNode("Hi there and greetings!");
+  d.id = "ele" + e.id;
+
+  //let divs = document.getElementsByClassName("basic-element");
+  //for (div of divs) div.onmousedown = onMouseDown;
+
+  d.onmousedown = onMouseDown;
+  const text = document.createTextNode(e.inner_value);
   d.appendChild(text);
   main.appendChild(d);
+  being_paste = false;
 };
 
 const removeElement = (index) => {
@@ -34,8 +43,8 @@ const removeElement = (index) => {
 };
 
 const generateAllElements = () => {
-  elements.forEach((e) => {
-    generateElement(e);
+  elements.forEach((e, i) => {
+    generateElement(e, i);
   });
 };
 
@@ -43,12 +52,20 @@ const setElement = (type, value = "") => {
   let newElement = structuredClone(defaultElement);
 
   newElement["is_" + type] = true;
+  newElement.inner_value = value;
+  while (ids_in_use.includes(newElement.id)) {
+    newElement.id++;
+  }
+  ids_in_use.push(newElement.id);
+
   elements.push(newElement);
+  setStorage("ids_in_use", ids_in_use);
   setStorage("elements", elements);
 
   generateElement(newElement);
 };
 
+//localStorage.clear()
 const setStorage = (id, value) => {
   localStorage.setItem(id, JSON.stringify(value));
 };
@@ -63,30 +80,31 @@ document.onpaste = async (evt) => {
   being_paste = true;
   let dataType = "text";
   const dT = evt.clipboardData;
+  let data = "";
 
-  if (dT) {
+  if (dT && dT.files.length > 0) {
     //is A File
     const file = dT.files[0];
   } else {
-    const data = await navigator.clipboard.readText();
+    data = await navigator.clipboard.readText();
     dataType = regex_url.test(data) ? "url" : type;
   }
 
-  setElement(dataType);
+  setElement(dataType, data);
 };
 
 //Init
 
 const e = getStorage("elements");
+const iiu = getStorage("ids_in_use");
 
 var elements = e ? e : [];
+
+const ids_in_use = iiu ? iiu : [0];
 
 generateAllElements();
 
 console.log(elements);
-
-let divs = document.getElementsByClassName("basic-element");
-for (div of divs) div.onmousedown = onMouseDown;
 
 document.onmousemove = onMouseMove;
 document.onmouseup = onMouseUp;
@@ -101,7 +119,7 @@ function onMouseDown(e) {
   the_last_mouse_position.y = e.clientY;
   e.target.style.border = "2px solid blue"; // highlight the border of the div
 
-  var divs = document.getElementsByTagName("div");
+  var divs = document.getElementsByClassName("basic-element");
   e.target.style.zIndex = divs.length; // put this div  on top
   var i = 1;
   for (div of divs) if (div.id != the_moving_div) div.style.zIndex = i++; // put all other divs behind the selected one
@@ -123,7 +141,7 @@ function onMouseMove(e) {
 function onMouseUp(e) {
   e.preventDefault();
   if (the_moving_div == "") return;
-  document.getElementById(the_moving_div).style.border = "none"; // hide the border again
+  document.getElementById(the_moving_div).style.border = ""; // hide the border again
   the_moving_div = "";
 }
 
