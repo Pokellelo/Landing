@@ -13,3 +13,32 @@
     border: none;
     cursor: pointer;
 }
+
+.basic-element{
+    min-height: 100px;
+    min-width: 100px;
+    position: absolute;
+    display: block;
+    border: 2px grey solid;
+    border-radius: 5px;
+    resize:both;
+    overflow: auto;
+    transition: all 0.1s;
+}
+
+.basic-element:hover{
+    border-color: black;
+    cursor:grab;
+    z-index: 2;
+}
+
+body{
+    padding: 5px;
+}
+
+#menu{
+
+    padding: 10px;
+    border: 1px red solid;
+    position: absolute;
+}
