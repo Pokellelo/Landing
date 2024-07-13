@@ -151,6 +151,7 @@ function onMouseMove(e) {
   if (the_moving_div == "") return;
 
   const d = document.getElementById(the_moving_div);
+
   d.style.left = d.offsetLeft + e.clientX - the_last_mouse_position.x + "px"; // move the div by however much the mouse moved
   d.style.top = d.offsetTop + e.clientY - the_last_mouse_position.y + "px";
   the_last_mouse_position.x = e.clientX; // remember where the mouse is now
@@ -161,7 +162,8 @@ function onMouseMove(e) {
 function onMouseUp(e) {
   e.preventDefault();
   if (the_moving_div == "") return;
-  const d = document.getElementById(the_moving_div); // hide the border again
+  const d = document.getElementById(the_moving_div);
+  d.focus();
   the_moving_div = "";
 
   d.style.border = "";
@@ -174,3 +176,5 @@ function onMouseUp(e) {
 }
 
 function onMove() {}
+
+//onfocusout="myFunction()"
