@@ -1,15 +1,17 @@
 const defaultElement = {
   id: 0,
+  index: null,
   title: "No title",
   width: "100px",
   height: "100px",
-  positionX: 0,
-  positionY: 0,
+  positionX: "0px",
+  positionY: "0px",
   inner_value: "",
-  is_canvas: false,
-  is_image: false,
+  text_color: "black",
   is_text: false,
+  is_image: false,
   is_url: false,
+  is_canvas: false,
 };
 
 const main = document.getElementById("main");
@@ -21,11 +23,28 @@ const regex_url = /e/;
 let selected_id = null;
 let being_paste = false;
 
+const reset = () => {
+  localStorage.clear();
+  location.reload();
+};
+
 const generateElement = (e, index) => {
-  
-  const d = document.createElement("div");
+  let type_tag = "div";
+
+  let unique_tags = {};
+
+  if (e.is_text) type_tag = "textarea";
+  else if (e.is_image) type_tag = "img";
+  else if (e.is_url) type_tag = "a";
+  else if (e.is_canvas) type_tag = "iframe";
+
+  const d = document.createElement(type_tag);
   d.className = "basic-element";
   d.id = "ele" + e.id;
+  d.style.color = e.text_color;
+
+  d.style.left = e.positionX;
+  d.style.top = e.positionY;
 
   //let divs = document.getElementsByClassName("basic-element");
   //for (div of divs) div.onmousedown = onMouseDown;
@@ -58,11 +77,13 @@ const setElement = (type, value = "") => {
   }
   ids_in_use.push(newElement.id);
 
-  elements.push(newElement);
+  const index = elements.push(newElement) - 1;
+
+  elements[index].index = index;
   setStorage("ids_in_use", ids_in_use);
   setStorage("elements", elements);
 
-  generateElement(newElement);
+  generateElement(newElement, index);
 };
 
 //localStorage.clear()
@@ -97,14 +118,13 @@ document.onpaste = async (evt) => {
 
 const e = getStorage("elements");
 const iiu = getStorage("ids_in_use");
+const bc = getStorage("background_color");
 
-var elements = e ? e : [];
-
+let elements = e ? e : [];
 const ids_in_use = iiu ? iiu : [0];
+let background_color = bc ? bc : "white";
 
 generateAllElements();
-
-console.log(elements);
 
 document.onmousemove = onMouseMove;
 document.onmouseup = onMouseUp;
@@ -130,7 +150,7 @@ function onMouseMove(e) {
 
   if (the_moving_div == "") return;
 
-  var d = document.getElementById(the_moving_div);
+  const d = document.getElementById(the_moving_div);
   d.style.left = d.offsetLeft + e.clientX - the_last_mouse_position.x + "px"; // move the div by however much the mouse moved
   d.style.top = d.offsetTop + e.clientY - the_last_mouse_position.y + "px";
   the_last_mouse_position.x = e.clientX; // remember where the mouse is now
@@ -141,8 +161,16 @@ function onMouseMove(e) {
 function onMouseUp(e) {
   e.preventDefault();
   if (the_moving_div == "") return;
-  document.getElementById(the_moving_div).style.border = ""; // hide the border again
+  const d = document.getElementById(the_moving_div); // hide the border again
   the_moving_div = "";
+
+  d.style.border = "";
+
+  // -1 it's temporary
+  elements[d.id.slice(-1) - 1].positionY = d.style.top;
+  elements[d.id.slice(-1) - 1].positionX = d.style.left;
+
+  setStorage("elements", elements);
 }
 
 function onMove() {}
