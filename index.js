@@ -10,46 +10,65 @@ const defaultElement = {
   text_color: "black",
   is_text: false,
   is_image: false,
+  id_vide: false,
   is_url: false,
   is_canvas: false,
 };
 
 const main = document.getElementById("main");
 
-const regex_text =
+const regex_url =
   /[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/;
-const regex_url = /e/;
 
 let selected_id = null;
 let being_paste = false;
-
+let resized = null;
 const reset = () => {
   localStorage.clear();
   location.reload();
 };
+
+const resizeObserver = new ResizeObserver((entries) => {
+  resized = {
+    id: entries[0].target.childNodes[0].id,
+    height: entries[0].contentRect.height,
+    width: entries[0].contentRect.width,
+  };
+});
 
 const generateElement = (e, index) => {
   let type_tag = "div";
 
   let unique_tags = {};
 
-  if (e.is_text) type_tag = "textarea";
-  else if (e.is_image) {
+  if (e.is_text) {
+    type_tag = "textarea";
+    unique_tags.title = "text" + e.id;
+  } else if (e.is_image) {
     type_tag = "img";
-  } else if (e.is_url) type_tag = "a";
-  else if (e.is_canvas) type_tag = "iframe";
+    unique_tags.alt = "image" + e.id;
+  } else if (e.is_url) {
+    type_tag = "a";
+    unique_tags.href = e.inner_value;
+    unique_tags.target = "_";
+  } else if (e.is_canvas) type_tag = "iframe";
 
   const d = document.createElement(type_tag);
-  d.className = "basic-element";
+  const wrapper = document.createElement("div");
+
   d.id = "ele" + e.id;
-  d.style.color = e.text_color;
+  wrapper.style.color = e.text_color;
 
-  d.style.left = e.positionX;
-  d.style.top = e.positionY;
+  wrapper.style.left = e.positionX;
+  wrapper.style.top = e.positionY;
+  wrapper.style.width = e.width;
+  wrapper.style.height = e.height;
 
-  //let divs = document.getElementsByClassName("basic-element");
-  //for (div of divs) div.onmousedown = onMouseDown;
+  resizeObserver.observe(wrapper);
 
+  wrapper.className = "wrapper";
+
+  d.className = "basic-element";
   d.onmousedown = onMouseDown;
   const text = document.createTextNode(e.inner_value);
 
@@ -58,7 +77,11 @@ const generateElement = (e, index) => {
   } else {
     d.src = e.inner_value;
   }
-  main.appendChild(d);
+
+  wrapper.appendChild(d);
+
+  main.appendChild(wrapper);
+
   being_paste = false;
 };
 
@@ -128,7 +151,8 @@ document.onpaste = async (evt) => {
     }
   } else {
     data = await navigator.clipboard.readText();
-    dataType = regex_url.test(data) ? "url" : type;
+    if (regex_url.test(data)) dataType = "url";
+    console.log(dataType);
     setElement(dataType, data);
   }
 };
@@ -150,15 +174,17 @@ document.onmouseup = onMouseUp;
 
 var the_moving_div = "";
 var the_last_mouse_position = { x: 0, y: 0 };
+let mousemoving = false;
 
 function onMouseDown(e) {
+  mousemoving = true;
   e.preventDefault();
   the_moving_div = e.target.id; // remember which div has been selected
   the_last_mouse_position.x = e.clientX; // remember where the mouse was when it was clicked
   the_last_mouse_position.y = e.clientY;
-  e.target.style.border = "2px solid blue"; // highlight the border of the div
+  e.target.parentElement.style.border = "2px solid blue"; // highlight the border of the div
 
-  var divs = document.getElementsByClassName("basic-element");
+  var divs = document.getElementsByClassName("wrapper");
   e.target.style.zIndex = divs.length; // put this div  on top
   var i = 1;
   for (div of divs) if (div.id != the_moving_div) div.style.zIndex = i++; // put all other divs behind the selected one
@@ -166,34 +192,38 @@ function onMouseDown(e) {
 
 function onMouseMove(e) {
   e.preventDefault();
-
   if (the_moving_div == "") return;
 
-  const d = document.getElementById(the_moving_div);
-
+  const h = document.getElementById(the_moving_div);
+  const d = h.parentElement;
   d.style.left = d.offsetLeft + e.clientX - the_last_mouse_position.x + "px"; // move the div by however much the mouse moved
   d.style.top = d.offsetTop + e.clientY - the_last_mouse_position.y + "px";
   the_last_mouse_position.x = e.clientX; // remember where the mouse is now
   the_last_mouse_position.y = e.clientY;
-  onMove();
 }
 
 function onMouseUp(e) {
+  if (resized) {
+    const rs = document.getElementById(resized.id);
+    elements[rs.id.slice(-1) - 1].height = resized.height + "px";
+    elements[rs.id.slice(-1) - 1].width = resized.width + "px";
+    setStorage("elements", elements);
+    resize = null;
+  }
+
   e.preventDefault();
   if (the_moving_div == "") return;
   const d = document.getElementById(the_moving_div);
+
+  console.log(d);
   d.focus();
   the_moving_div = "";
 
-  d.style.border = "";
+  d.parentElement.style.border = "";
 
   // -1 it's temporary
-  elements[d.id.slice(-1) - 1].positionY = d.style.top;
-  elements[d.id.slice(-1) - 1].positionX = d.style.left;
+  elements[d.id.slice(-1) - 1].positionY = d.parentElement.style.top;
+  elements[d.id.slice(-1) - 1].positionX = d.parentElement.style.left;
 
   setStorage("elements", elements);
 }
-
-function onMove() {}
-
-//onfocusout="myFunction()"

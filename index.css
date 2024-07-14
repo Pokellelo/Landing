@@ -1,3 +1,9 @@
+body {
+    height: 100%;
+    position:relative
+
+}
+
 #tools{
     position: fixed;
     top: 100px;
@@ -15,22 +21,28 @@
 }
 
 .basic-element{
-    min-height: 100px;
-    min-width: 100px;
-    position: absolute;
+    height: 100%;
+    width: 100%;
     display: block;
-    border: 2px grey solid;
-    border-radius: 5px;
-    resize:both;
-    overflow: auto;
+    
 }
 
-.basic-element:hover{
-    border-color: black;
-    cursor:grab;
-    z-index: 2;
-}
+
 
 body{
     padding: 5px;
+}
+
+
+.wrapper{
+    resize:both;
+    overflow: hidden;
+    border: 2px grey solid;
+    border-radius: 5px;
+    position: absolute; 
+}
+.wrapper:hover{
+    border-color: black;
+    cursor:grab;
+    z-index: 2;
 }
