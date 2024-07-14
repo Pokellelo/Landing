@@ -34,8 +34,9 @@ const generateElement = (e, index) => {
   let unique_tags = {};
 
   if (e.is_text) type_tag = "textarea";
-  else if (e.is_image) type_tag = "img";
-  else if (e.is_url) type_tag = "a";
+  else if (e.is_image) {
+    type_tag = "img";
+  } else if (e.is_url) type_tag = "a";
   else if (e.is_canvas) type_tag = "iframe";
 
   const d = document.createElement(type_tag);
@@ -51,7 +52,12 @@ const generateElement = (e, index) => {
 
   d.onmousedown = onMouseDown;
   const text = document.createTextNode(e.inner_value);
-  d.appendChild(text);
+
+  if (!e.is_image) {
+    d.appendChild(text);
+  } else {
+    d.src = e.inner_value;
+  }
   main.appendChild(d);
   being_paste = false;
 };
@@ -104,14 +110,27 @@ document.onpaste = async (evt) => {
   let data = "";
 
   if (dT && dT.files.length > 0) {
-    //is A File
-    const file = dT.files[0];
+    var orgEvent = evt;
+    for (var i = 0; i < orgEvent.clipboardData.items.length; i++) {
+      if (
+        orgEvent.clipboardData.items[i].kind == "file" &&
+        orgEvent.clipboardData.items[i].type == "image/png"
+      ) {
+        var imageFile = orgEvent.clipboardData.items[i].getAsFile();
+        var fileReader = new FileReader();
+        fileReader.onloadend = function () {
+          data = fileReader.result;
+          setElement("image", data);
+        };
+        fileReader.readAsDataURL(imageFile);
+        break;
+      }
+    }
   } else {
     data = await navigator.clipboard.readText();
     dataType = regex_url.test(data) ? "url" : type;
+    setElement(dataType, data);
   }
-
-  setElement(dataType, data);
 };
 
 //Init
