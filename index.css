@@ -20,14 +20,22 @@ body {
     cursor: pointer;
 }
 
-.basic-element{
+.element{
     height: 100%;
     width: 100%;
     display: block;
     
 }
 
-
+.element-toolbar{
+    position: absolute;
+    z-index: 5;
+    top:  5px;
+    right: 5px;
+    border: 1px gray solid;
+    width: 100px;
+    height: 25px;
+}
 
 body{
     padding: 5px;
