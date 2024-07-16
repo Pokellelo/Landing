@@ -2,6 +2,19 @@ body {
     padding: 5px;
 }
 
+textarea{
+    border: none;
+    background-color: white;
+}
+
+textarea:focus{
+    border: none !important;
+    outline: none;
+
+}
+
+
+
 #tools{
     position: fixed;
     top: 100px;
@@ -39,9 +52,10 @@ body {
 
 
 .wrapper{
+    background-color: white;
     resize:both;
     overflow: hidden;
-    border: 2px grey solid;
+    border: 1px #77A6F7 solid;
     border-radius: 5px;
     position: absolute; 
 }

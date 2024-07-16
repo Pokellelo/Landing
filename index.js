@@ -75,7 +75,7 @@ const generateElement = (e, index) => {
     {
       unique_tags = {
         title: "text" + e.id,
-        onfocusout: () => {}
+        onfocusout: (e) => { alert("HOLASD")}
       };
     }
   } else if (e.is_image) {
@@ -229,7 +229,7 @@ const onMouseDown = (e) => {
   the_moving_div = e.target.id; // remember which div has been selected
   the_last_mouse_position.x = e.clientX; // remember where the mouse was when it was clicked
   the_last_mouse_position.y = e.clientY;
-  e.target.parentElement.style.border = "2px solid blue"; // highlight the border of the div
+  e.target.parentElement.style.border = "2px solid white"; // highlight the border of the div
 
   var divs = document.getElementsByClassName("wrapper");
   e.target.style.zIndex = divs.length; // put this div  on top
@@ -247,4 +247,7 @@ let elements = e ? e : [];
 const ids_in_use = iiu ? iiu : [0];
 let background_color = bc ? bc : "white";
 
+
+document.body.style.backgroundColor="#D3E3FC";
+//D3E3FC //77A6F7
 generateAllElements();
