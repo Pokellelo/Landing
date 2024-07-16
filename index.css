@@ -1,7 +1,5 @@
 body {
-    height: 100%;
-    position:relative
-
+    padding: 5px;
 }
 
 #tools{
@@ -37,9 +35,7 @@ body {
     height: 25px;
 }
 
-body{
-    padding: 5px;
-}
+
 
 
 .wrapper{
@@ -49,6 +45,7 @@ body{
     border-radius: 5px;
     position: absolute; 
 }
+
 .wrapper:hover{
     border-color: black;
     cursor:grab;

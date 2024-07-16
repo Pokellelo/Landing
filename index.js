@@ -72,7 +72,12 @@ const generateElement = (e, index) => {
   let type_tag = "div";
   if (e.is_text) {
     type_tag = "textarea";
-    unique_tags.title = "text" + e.id;
+    {
+      unique_tags = {
+        title: "text" + e.id,
+        onfocusout: () => {}
+      };
+    }
   } else if (e.is_image) {
     type_tag = "img";
     unique_tags.alt = "image" + e.id;
