@@ -245,9 +245,8 @@ const bc = getStorage("background_color");
 
 let elements = e ? e : [];
 const ids_in_use = iiu ? iiu : [0];
-let background_color = bc ? bc : "white";
+document.body.style.backgroundColor = bc ? bc : "white";
 
 
-document.body.style.backgroundColor="#D3E3FC";
 //D3E3FC //77A6F7
 generateAllElements();
