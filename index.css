@@ -26,7 +26,9 @@ textarea:focus{
     top: 100px;
     display: flex;
     flex-direction: column;
-    padding: 50px;
+    padding: 20px;
+    border: 1px #77A6F7 solid;
+    border-radius: 5px;
 }
 
 #tools button{
@@ -53,9 +55,6 @@ textarea:focus{
     width: 100px;
     height: 25px;
 }
-
-
-
 
 .wrapper{
     background-color: white;
