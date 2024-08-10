@@ -37,9 +37,9 @@ const setStorage = (id, value) => {
   localStorage.setItem(id, JSON.stringify(value));
 };
 
-const getStorage = (id) => {
+const getStorage = (id, defaultValue=undefined) => {
   const data = localStorage.getItem(id);
-  return data ? JSON.parse(data) : undefined;
+  return data ? JSON.parse(data) : defaultValue;
 };
 const reset = () => {
   localStorage.clear();
@@ -153,6 +153,12 @@ const setElement = (type, value = "") => {
   generateElement(newElement, index);
 };
 
+const openModalLink = (linkIndex) => {
+
+  
+}
+
+
 //Handlers, listeners
 document.onpaste = async (evt) => {
   if (being_paste) return;
@@ -239,13 +245,11 @@ const onMouseDown = (e) => {
 
 //Initialization
 
-const e = getStorage("elements");
-const iiu = getStorage("ids_in_use");
-const bc = getStorage("background_color");
+let elements = getStorage("elements", [])
+let links = getStorage("links");
 
-let elements = e ? e : [];
-const ids_in_use = iiu ? iiu : [0];
-document.body.style.backgroundColor = bc ? bc : "white";
+const ids_in_use =  getStorage("ids_in_use", [0]);
+document.body.style.backgroundColor = getStorage("background_color", "white");
 
 
 //D3E3FC //77A6F7

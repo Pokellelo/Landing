@@ -31,6 +31,11 @@ textarea:focus{
     border-radius: 5px;
 }
 
+#linkModal{
+    padding:10px;
+    margin: 10px;
+}
+
 #tools button{
     flex: content;
     margin: 10px 0px;
