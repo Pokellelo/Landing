@@ -10,9 +10,7 @@ textarea{
 textarea:focus{
     border: none !important;
     outline: none;
-
 }
-
 
 
 #tools{
@@ -21,6 +19,14 @@ textarea:focus{
     right:5px;
     display: flex;
     flex-direction: column;
+}
+
+#links{
+    position: fixed;
+    top: 100px;
+    display: flex;
+    flex-direction: column;
+    padding: 50px;
 }
 
 #tools button{
