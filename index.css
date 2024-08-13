@@ -32,9 +32,14 @@ textarea:focus{
 }
 
 #linkModal{
-    padding:10px;
-    margin: 10px;
-    position: absolute;
+    background-color: #fefefe;
+    margin: 25% auto; 
+    padding: 50px 20px;
+    border: 1px solid #888;
+    width: 80%; 
+}
+#linkModal label{
+    display: block;
 }
 
 #tools button{
@@ -78,7 +83,7 @@ textarea:focus{
 }
 
 .modal {
-    display: none; /* Hidden by default */
+    /*display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
     left: 0;
@@ -88,4 +93,9 @@ textarea:focus{
     overflow: auto; /* Enable scroll if needed */
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+
+  #modal-actions{
+    text-align: right;
+    
   }
